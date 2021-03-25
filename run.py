@@ -4,10 +4,9 @@ import yaml
 import re
 import html
 from dotenv import load_dotenv
-
-# define config object
 from typing import List
 
+# define config object
 config = {
     "api_key": "",
     "api_url": "",

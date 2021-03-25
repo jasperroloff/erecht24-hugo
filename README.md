@@ -1,6 +1,6 @@
 # eRecht24-Hugo
 
-This project allows the automated usage of legal documents from e-recht24.de with the hugo static site generator.
+This project allows the automated usage of legal documents from e-recht24.de with the [Hugo](https://gohugo.io) static site generator.
 
 It uses the [REST API](https://docs.api.e-recht24.de/) for downloading the current versions, converts the html to markdown and makes them hugo-compatible.
 
@@ -8,23 +8,23 @@ It uses the [REST API](https://docs.api.e-recht24.de/) for downloading the curre
 
 - The usage of the API requires a valid premium subscription for eRecht24
 - An API key for the corresponding project has to exist. It can be created in the [eRecht24 Project-Manager](https://www.e-recht24.de/mitglieder/tools/projekt-manager/)
-- This project is written in Python 3.8, so it requires a working Python distribution
+- This script is written in Python 3.8, hence it requires a working Python distribution
 
 ## Setup
 
-1. Download/Clone the `run.py`, `requirements.txt` and the `config.yaml`
+1. Download or clone the files `run.py`, `requirements.txt` and `config.yaml`
 2. Configure the API key by setting an environment variable (`export API_KEY=xxxx`) or by creating a file called `.env` with the following content:
 ```
 API_KEY=xxxxx
 ```
 3. Configure all values in `config.yaml` according to your needs (see below)
 4. Install all requirements by running `pip -r requirements.txt`
-5. Execute the script (e.g. `python3 run.py`)
+5. Run the script (e.g. `python3 run.py`)
 6. You should now see the markdown files appear in your output directory
 
 ## Configuration
 
-The `config.yaml` is used for configuring the script. The settings are explained here:
+The `config.yaml` is used to configure the script. The settings are explained here:
 
 **General `config.yaml`:**
 
@@ -61,6 +61,17 @@ When building the markdown-files, the script prepends the hugo header before the
 
 |Placeholder|Description|
 |-----------|-----------|
-|`H1_TEXT`  |If this placeholder is present in a template, the script searches for the first h1 heading in the markdown, removes it from the markdown and puts it into the hugo-header.|
+|`H1_TEXT`|If this placeholder is present in a template, the script searches for the first h1 heading in the markdown, removes it from the markdown and puts it into the hugo-header.|
 |`PUBLISH_DATE`|This placeholder will be replaced by the smallest creation date of the documents included in this page|
 |`MAX_DATE`|This placeholder will be replaced by the greatest modified date of the documents included in this page|
+
+
+## Legal
+
+### Affiliation
+
+This project is NOT affiliated to eRecht24.
+
+### License
+
+See [LICENSE.txt](./LICENSE.txt)
