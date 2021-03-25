@@ -1,0 +1,59 @@
+api_url: https://api.e-recht24.de
+output_dir: output/
+save_html: false
+pages:
+  - filename: imprint.de
+    query:
+      - path: /v1/imprint
+        json_key: html_de
+    hugo_head:
+      title: H1_TEXT
+      slug: impressum
+      publishDate: PUBLISH_DATE
+      lastmod: MOD_DATE
+      menu:
+        footer:
+          weight: 10
+
+  - filename: imprint.en
+    query:
+      - path: /v1/imprint
+        json_key: html_en
+    hugo_head:
+      title: H1_TEXT
+      slug: impress
+      publishDate: PUBLISH_DATE
+      lastmod: MOD_DATE
+      menu:
+        footer:
+          weight: 10
+
+  - filename: privacy-policy.de
+    query:
+      - path: /v1/privacyPolicy
+        json_key: html_de
+      - path: /v1/privacyPolicySocialMedia
+        json_key: html_de
+    hugo_head:
+      title: H1_TEXT
+      slug: datenschutz
+      publishDate: PUBLISH_DATE
+      lastmod: MOD_DATE
+      menu:
+        footer:
+          weight: 20
+
+  - filename: privacy-policy.en
+    query:
+      - path: /v1/privacyPolicy
+        json_key: html_en
+      - path: /v1/privacyPolicySocialMedia
+        json_key: html_en
+    hugo_head:
+      title: H1_TEXT
+      slug: privacy
+      publishDate: PUBLISH_DATE
+      lastmod: MOD_DATE
+      menu:
+        footer:
+          weight: 20
