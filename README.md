@@ -63,7 +63,7 @@ When building the markdown-files, the script prepends the hugo header before the
 |-----------|-----------|
 |`H1_TEXT`|If this placeholder is present in a template, the script searches for the first h1 heading in the markdown, removes it from the markdown and puts it into the hugo-header.|
 |`PUBLISH_DATE`|This placeholder will be replaced by the smallest creation date of the documents included in this page|
-|`MAX_DATE`|This placeholder will be replaced by the greatest modified date of the documents included in this page|
+|`MOD_DATE`|This placeholder will be replaced by the greatest modified date of the documents included in this page|
 
 
 ## Legal
