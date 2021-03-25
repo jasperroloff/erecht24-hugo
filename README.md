@@ -13,7 +13,7 @@ It uses the [REST API](https://docs.api.e-recht24.de/) for downloading the curre
 ## Setup
 
 1. Download or clone the files `run.py`, `requirements.txt` and `config.yaml`
-2. Configure the API key by setting an environment variable (`export API_KEY=xxxx`) or by creating a file called `.env` with the following content:
+2. Configure the API key by setting an environment variable (`export API_KEY=xxxxx`) or by creating a file named `.env` with the following content:
 ```
 API_KEY=xxxxx
 ```
