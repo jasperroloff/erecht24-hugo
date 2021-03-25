@@ -33,7 +33,7 @@ h6_pattern = re.compile(r'<h6>(.*?)</h6>', flags=re.IGNORECASE | re.DOTALL)
 br_pattern = re.compile(r'<br\s?/>\s?', flags=re.IGNORECASE | re.DOTALL)
 strong_pattern = re.compile(r'<strong>(.*?)</strong>', flags=re.IGNORECASE | re.DOTALL)
 p_pattern = re.compile(r'<p>(.*?)</p>', flags=re.IGNORECASE | re.DOTALL)
-md_h1_pattern = re.compile(r'# (.*?)\n', flags=re.IGNORECASE | re.DOTALL)
+md_h1_pattern = re.compile(r'(\n|^)# (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL)
 
 
 # write string to file
@@ -88,14 +88,19 @@ def make_hugo_head(md: str, modified_list: List[str], created_list: List[str], t
     tmp_hugo_head = tmp_hugo_head.replace("PUBLISH_DATE", publish_date)
     tmp_hugo_head = tmp_hugo_head.replace("MOD_DATE", mod_date)
 
-    if "H1_TEXT" in template:
-        # remove h1 heading
+    if "H1_TEXT" in tmp_hugo_head:
+        # find first h1 heading
         md_h1_match = md_h1_pattern.search(md)
         if not md_h1_match:
             raise Exception("no h1 found, but required for hugo head")
-        h1_text = md_h1_match.group(1)
-        h1_start_pos, h1_end_pos = md_h1_match.span(0)
+        # get text of h1 heading
+        h1_text = md_h1_match.group('title')
+        # start end end position of h1
+        h1_start_pos, h1_end_pos = md_h1_match.span()
+        # remove h1 from markdown string
         md = md[:h1_start_pos] + md[h1_end_pos:]
+        md = md.strip() + "\n"
+        # replace H1_TEXT placeholder in hugo_head template
         tmp_hugo_head = tmp_hugo_head.replace("H1_TEXT", h1_text)
 
     # add hugo title to document
