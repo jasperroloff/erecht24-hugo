@@ -21,7 +21,7 @@ pages:
         json_key: html_en
     hugo_head:
       title: H1_TEXT
-      slug: impress
+      slug: imprint
       publishDate: PUBLISH_DATE
       lastmod: MOD_DATE
       menu:
