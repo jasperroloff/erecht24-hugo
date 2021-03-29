@@ -33,7 +33,7 @@ The `config.yaml` is used to configure the script. The settings are explained he
 |`api_url`|String|The URL of the eRecht24 REST API|`https://api.e-recht24.de`|
 |`output_dir`|String|Path to a directory where the generated files will be saved. If it doesn't exist, it will be created.|`output/`|
 |`save_html`|Bool|Whether to save html files or not|`false`|
-|`increase_heading_levels`|Int|How heading levels should be increased. Value of 1 means `h1` -> `h2`, `h2` -> `h3`, `h3` -> `h4`, `h4` -> `h5`, `h5` -> `h6` and `h6` -> **strong**. A means `h1` -> `h3`, `h2` -> `h4` and so on. A value of 0 means no increasing. When reaching levels greater than 6, the heading will be converted to strong text.|`1`|
+|`increase_heading_levels`|Int|How heading levels should be increased. Value of 1 means `h1` -> `h2`, `h2` -> `h3`, `h3` -> `h4`, `h4` -> `h5`, `h5` -> `h6` and `h6` -> **strong**. A value of 2 means `h1` -> `h3`, `h2` -> `h4` and so on. A value of 0 means no increasing. When reaching levels greater than 6, the heading will be converted to strong text.|`1`|
 |`pages`|List|List of pages object||
 
 **Pages objects:**
