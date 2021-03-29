@@ -13,6 +13,7 @@ config = {
     "output_dir": "",
     "save_html": False,
     "docs": [],
+    "increase_heading_levels": 1,
 }
 
 # load config from file
@@ -24,16 +25,26 @@ load_dotenv()
 config['api_key'] = os.getenv("API_KEY")
 
 # define regex patterns
-h1_pattern = re.compile(r'<h1>(.*?)</h1>', flags=re.IGNORECASE | re.DOTALL)
-h2_pattern = re.compile(r'<h2>(.*?)</h2>', flags=re.IGNORECASE | re.DOTALL)
-h3_pattern = re.compile(r'<h3>(.*?)</h3>', flags=re.IGNORECASE | re.DOTALL)
-h4_pattern = re.compile(r'<h4>(.*?)</h4>', flags=re.IGNORECASE | re.DOTALL)
-h5_pattern = re.compile(r'<h5>(.*?)</h5>', flags=re.IGNORECASE | re.DOTALL)
-h6_pattern = re.compile(r'<h6>(.*?)</h6>', flags=re.IGNORECASE | re.DOTALL)
+h_patterns = [
+    re.compile(r'<h1>(.*?)</h1>', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'<h2>(.*?)</h2>', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'<h3>(.*?)</h3>', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'<h4>(.*?)</h4>', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'<h5>(.*?)</h5>', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'<h6>(.*?)</h6>', flags=re.IGNORECASE | re.DOTALL),
+]
 br_pattern = re.compile(r'<br\s?/>\s?', flags=re.IGNORECASE | re.DOTALL)
 strong_pattern = re.compile(r'<strong>(.*?)</strong>', flags=re.IGNORECASE | re.DOTALL)
 p_pattern = re.compile(r'<p>(.*?)</p>', flags=re.IGNORECASE | re.DOTALL)
-md_h1_pattern = re.compile(r'(\n|^)# (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL)
+
+md_h_patterns = [
+    re.compile(r'(\n|^)# (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'(\n|^)## (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'(\n|^)### (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'(\n|^)#### (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'(\n|^)##### (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL),
+    re.compile(r'(\n|^)###### (?P<title>.*?)\n', flags=re.IGNORECASE | re.DOTALL),
+]
 
 
 # write string to file
@@ -51,12 +62,8 @@ def convert_html_to_md(html_doc: str) -> str:
     md = md.replace("\r\n", "\n")
 
     # replace opening heading-tags
-    md = h1_pattern.sub(r'\n# \1\n', md)
-    md = h2_pattern.sub(r'\n## \1\n', md)
-    md = h3_pattern.sub(r'\n### \1\n', md)
-    md = h4_pattern.sub(r'\n#### \1\n', md)
-    md = h5_pattern.sub(r'\n##### \1\n', md)
-    md = h6_pattern.sub(r'\n###### \1\n', md)
+    for i in range(6):
+        md = h_patterns[i].sub(lambda match: "\n" + ("#" * (i + 1)) + " " + match.group(1) + "\n", md)
 
     # rewrite line breaks
     md = br_pattern.sub(r'  \n\n', md)
@@ -79,6 +86,22 @@ def convert_html_to_md(html_doc: str) -> str:
     return md
 
 
+def fix_heading_levels(md: str, increase: int) -> str:
+    if increase > 0:
+
+        for i in range(6):
+            orig_level = 6 - i
+            new_level = orig_level + increase
+            pattern = md_h_patterns[orig_level - 1]
+
+            if new_level > 6:
+                md = pattern.sub(lambda match: "\n**" + match.group('title') + "**\n", md)
+            else:
+                md = pattern.sub(lambda match: "\n" + ("#" * new_level) + " " + match.group('title') + "\n", md)
+
+    return md
+
+
 def make_hugo_head(md: str, modified_list: List[str], created_list: List[str], template: str) -> str:
     publish_date = min(created_list)
     mod_date = max(modified_list)
@@ -90,7 +113,7 @@ def make_hugo_head(md: str, modified_list: List[str], created_list: List[str], t
 
     if "H1_TEXT" in tmp_hugo_head:
         # find first h1 heading
-        md_h1_match = md_h1_pattern.search(md)
+        md_h1_match = md_h_patterns[0].search(md)
         if not md_h1_match:
             raise Exception("no h1 found, but required for hugo head")
         # get text of h1 heading
@@ -99,9 +122,12 @@ def make_hugo_head(md: str, modified_list: List[str], created_list: List[str], t
         h1_start_pos, h1_end_pos = md_h1_match.span()
         # remove h1 from markdown string
         md = md[:h1_start_pos] + md[h1_end_pos:]
-        md = md.strip() + "\n"
         # replace H1_TEXT placeholder in hugo_head template
         tmp_hugo_head = tmp_hugo_head.replace("H1_TEXT", h1_text)
+
+    md = fix_heading_levels(md, config['increase_heading_levels'])
+
+    md = md.strip() + "\n"
 
     # add hugo title to document
     md = tmp_hugo_head + md

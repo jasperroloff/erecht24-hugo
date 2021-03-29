@@ -1,6 +1,7 @@
 api_url: https://api.e-recht24.de
 output_dir: output/
 save_html: false
+increase_heading_levels: 1
 pages:
   - filename: imprint.de
     query:
